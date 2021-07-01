@@ -1,26 +1,11 @@
-import React, { useState } from 'react';
-import { useLocation, Link } from 'react-router-dom';
-import { categories } from '../../data/categories';
+import React, {useState} from 'react';
+import {useLocation, Link} from 'react-router-dom';
+import {categories} from '../../data/categories';
 
 function Menu(): JSX.Element {
-  const location = useLocation();
-
-  document.querySelector('.cover')?.addEventListener('click', () => {
-    openOrCloseMenu();
-  });
-
-  React.useEffect(() => {
-    const menuLinks = Array.from(document.querySelectorAll('.menu-link'));
-    const currentLink = menuLinks.find((link) => (link as HTMLLinkElement).href === window.location.href);
-
-    document.querySelector('.menu-items .active')?.classList.remove('active');
-    currentLink?.classList.add('active');
-
-    document.querySelector('.cover')?.classList.remove('cover-active');
-  }, [location]);
-
   const [menuIcon, setMenuIcon] = useState('dehaze');
   const [menuStatus, setMenuStatus] = useState('closed');
+  const location = useLocation();
 
   function openOrCloseMenu(): void {
     setMenuStatus(menuStatus === 'closed' ? 'opened' : 'closed');
@@ -33,9 +18,27 @@ function Menu(): JSX.Element {
     openOrCloseMenu();
   }
 
+  document.querySelector('.cover')?.addEventListener('click', () => {
+    openOrCloseMenu();
+  });
+
+  React.useEffect(() => {
+    const menuLinks = Array.from(document.querySelectorAll('.menu-link'));
+    const currentLink = menuLinks.find(
+      (link) => (link as HTMLLinkElement).href === window.location.href,
+    );
+
+    document.querySelector('.menu-items .active')?.classList.remove('active');
+    currentLink?.classList.add('active');
+
+    document.querySelector('.cover')?.classList.remove('cover-active');
+  }, [location]);
+
   const categoryLinks = categories.map((category, index) => (
     <li className="menu-item" key={String(index + 1)} onClick={handleMunuItemClick}>
-      <Link className="menu-link" to={`/${category.name.split(' ').join('_').replace(/[()]/g, '')}`}>
+      <Link
+        className="menu-link"
+        to={`/${category.name.split(' ').join('_').replace(/[()]/g, '')}`}>
         {category.name}
       </Link>
     </li>

@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { Switch, Route } from 'react-router-dom';
-import { categories } from '../../data/categories';
+import {Switch, Route} from 'react-router-dom';
+import {categories} from '../../data/categories';
+
 import CategoryPage from './CategoryPage/CategoryPage';
 import MainPage from './MainPage/MainPage';
 
@@ -11,7 +12,7 @@ function Main(): JSX.Element {
       key={String(index + 1)}
       exact
       path={`/${category.name.split(' ').join('_').replace(/[()]/g, '')}`}
-      component={() => <CategoryPage index={index} />}
+      render={() => <CategoryPage index={index} />}
     />
   ));
 

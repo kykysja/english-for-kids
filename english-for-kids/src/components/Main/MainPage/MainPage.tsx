@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { categories } from '../../../data/categories';
+import {Link} from 'react-router-dom';
+import {categories} from '../../../data/categories';
 
 function MainPage(): JSX.Element {
   const cards = categories.map((category, index) => (
@@ -8,12 +8,12 @@ function MainPage(): JSX.Element {
       <Link to={`/${category.name.split(' ').join('_').replace(/[()]/g, '')}`}>
         <div className="card">
           <div className="card-top">
-            <div className="card__img-wrap">
+            <div className="card-img-wrap">
               <img className="img" src={category.image} alt="!!!!!!!" />
             </div>
           </div>
           <div className="card-bottom">
-            <h1 className="card__title">{category.name}</h1>
+            <h1 className="card-title">{category.name}</h1>
           </div>
         </div>
       </Link>
