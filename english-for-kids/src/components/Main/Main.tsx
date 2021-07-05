@@ -1,18 +1,21 @@
+import './Main.scss';
+
 import React from 'react';
 
 import {Switch, Route} from 'react-router-dom';
-import {categories} from '../../data/categories';
 
 import CategoryPage from './CategoryPage/CategoryPage';
 import MainPage from './MainPage/MainPage';
 
+import {categories} from '../../data/categories';
+
 function Main(): JSX.Element {
-  const routess = categories.map((category, index) => (
+  const routess = categories.map((category) => (
     <Route
-      key={String(index + 1)}
+      key={category.id}
       exact
-      path={`/${category.name.split(' ').join('_').replace(/[()]/g, '')}`}
-      render={() => <CategoryPage index={index} />}
+      path={category.path}
+      render={() => <CategoryPage categoryId={category.id} />}
     />
   ));
 

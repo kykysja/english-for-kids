@@ -1,0 +1,65 @@
+@import '../../../base-styles/const';
+@import '../../../base-styles/fonts';
+@import '../../../base-styles/mixins';
+
+.menu-toggle {
+  margin-left: 20px;
+  position: relative;
+  z-index: 1000;
+  cursor: pointer;
+
+  @include media-max-910 {
+    margin-left: 12px;
+  }
+}
+.material-icons {
+  font-size: 4.2rem;
+  color: $color-main-text;
+}
+.menu-items-wrap {
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  position: absolute;
+  width: 340px;
+  top: 0;
+  left: -340px;
+  z-index: 100;
+  transition: all ease 0.4s;
+
+  &.train-mode {
+    background: $color-gradient;
+  }
+  &.play-mode {
+    background: $color-gradient-play-mode;
+  }
+}
+
+.opened {
+  left: 0;
+}
+.menu-items {
+  margin: 155px 0px;
+  display: flex;
+  flex-direction: column;
+}
+.menu-item {
+  margin-bottom: 25px;
+}
+.menu-link {
+  @include font(2.6rem, 2.6rem, 400);
+  color: $color-main-light;
+
+  &:hover {
+    font-weight: 500;
+  }
+}
+
+.active {
+  text-decoration: underline;
+  cursor: default;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

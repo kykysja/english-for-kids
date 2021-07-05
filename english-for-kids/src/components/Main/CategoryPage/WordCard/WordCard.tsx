@@ -1,14 +1,11 @@
-import React, {SyntheticEvent, useState} from 'react';
+import './WordCard.scss';
 
-function WordCard(props: {
-  wordBody: {
-    word: string;
-    translation: string;
-    image: string;
-    audioSrc: string;
-  };
-  key: string;
-}): JSX.Element {
+import React, {SyntheticEvent, useState} from 'react';
+import {useSelector} from 'react-redux';
+
+import {WordCardBody} from '../../../../types/types';
+
+function WordCard(props: {wordBody: WordCardBody; key: number}): JSX.Element {
   const [cardStatus, seCardStatus] = useState('');
 
   function playWord(event: SyntheticEvent, src: string): void {
@@ -24,7 +21,6 @@ function WordCard(props: {
     seCardStatus('');
   }
   function flippToBack(): void {
-    console.log('hjkkj');
     seCardStatus('flipped');
   }
 
@@ -32,6 +28,7 @@ function WordCard(props: {
     backgroundImage: `url(${props.wordBody.image})`,
   };
 
+  const currentMode = useSelector((state: {mode: string}) => state.mode);
   return (
     <div className={`card-wrap word-card ${cardStatus}`} onMouseLeave={flippToFront}>
       <div className="card">
@@ -39,7 +36,7 @@ function WordCard(props: {
           <div className="card-top">
             <div className="card-img" style={backgroundImage} />
           </div>
-          <div className="card-bottom">
+          <div className={`card-bottom ${currentMode}`}>
             <h1 className="card-title">{props.wordBody.word}</h1>
             <button className="rotate-btn" type="button" onClick={flippToBack}>
               <span className="material-icons">cached</span>
@@ -60,6 +57,3 @@ function WordCard(props: {
 }
 
 export default WordCard;
-
-// <img className="img" src={props.wordBody.image} alt="!!!!!!!!" />
-// <img className="img" src={props.wordBody.image} alt="!!!!!" />

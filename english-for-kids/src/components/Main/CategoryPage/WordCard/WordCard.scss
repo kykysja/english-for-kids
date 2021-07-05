@@ -1,0 +1,123 @@
+@import '../../../../base-styles/const';
+@import '../../../../base-styles/mixins';
+
+.word-card {
+  perspective: 1200px;
+
+  .card {
+    transform-style: preserve-3d;
+    transform-origin: right;
+    transition: all 0.8s;
+    height: 287px;
+
+    @include media-max-1372 {
+      height: 275px;
+    }
+    @include media-max-1060 {
+      height: 240px;
+    }
+    @include media-max-910 {
+      height: 210px;
+    }
+    @include media-max-768 {
+      height: 185px;
+    }
+    @include media-max-640 {
+      height: 175px;
+    }
+    @include media-max-424 {
+      height: 210px;
+    }
+  }
+  .card-front,
+  .card-back {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    backface-visibility: hidden;
+  }
+  .card-front {
+    .card-bottom {
+      @include media-max-910 {
+        justify-content: start;
+      }
+    }
+  }
+  .card-back {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    transform: rotateY(180deg);
+  }
+
+  .card-top {
+    background: transparent;
+    padding: 0;
+    height: 100%;
+
+    .card-img {
+      width: 100%;
+      height: 100%;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: 50%;
+    }
+  }
+
+  .card-bottom {
+    padding-top: 25px;
+
+    &.train-mode {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    &.play-mode {
+      display: none;
+    }
+
+    @include media-max-1060 {
+      padding-top: 15px;
+    }
+
+    @include media-max-910 {
+      margin-left: 10px;
+    }
+
+    .rotate-btn {
+      position: absolute;
+      right: 0;
+      margin-right: 10px;
+
+      .material-icons {
+        background: $color-main-light;
+        color: $color-main-text-gray;
+        pointer-events: none;
+
+        @include media-max-1060 {
+          @include font(3.2rem, 3.2rem);
+        }
+        @include media-max-910 {
+          @include font(3rem, 3rem);
+        }
+      }
+
+      &:hover {
+        .material-icons {
+          color: $color-main;
+        }
+      }
+    }
+  }
+}
+
+.flipped {
+  .card {
+    transform: rotateY(180deg) translateX(-100%);
+    transform-origin: left;
+  }
+  .rotate-btn {
+    display: none;
+  }
+}

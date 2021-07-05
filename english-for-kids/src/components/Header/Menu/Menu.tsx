@@ -1,6 +1,10 @@
+import './Menu.scss';
+
 import React, {useState} from 'react';
-import {useLocation, Link} from 'react-router-dom';
-import {categories} from '../../data/categories';
+import {useLocation, NavLink} from 'react-router-dom';
+import {useSelector} from 'react-redux';
+
+import {categories} from '../../../data/categories';
 
 function Menu(): JSX.Element {
   const [menuIcon, setMenuIcon] = useState('dehaze');
@@ -17,46 +21,37 @@ function Menu(): JSX.Element {
   function handleMunuItemClick(): void {
     openOrCloseMenu();
   }
-
   document.querySelector('.cover')?.addEventListener('click', () => {
     openOrCloseMenu();
   });
 
   React.useEffect(() => {
-    const menuLinks = Array.from(document.querySelectorAll('.menu-link'));
-    const currentLink = menuLinks.find(
-      (link) => (link as HTMLLinkElement).href === window.location.href,
-    );
-
-    document.querySelector('.menu-items .active')?.classList.remove('active');
-    currentLink?.classList.add('active');
-
     document.querySelector('.cover')?.classList.remove('cover-active');
   }, [location]);
 
-  const categoryLinks = categories.map((category, index) => (
-    <li className="menu-item" key={String(index + 1)} onClick={handleMunuItemClick}>
-      <Link
-        className="menu-link"
-        to={`/${category.name.split(' ').join('_').replace(/[()]/g, '')}`}>
+  const links = categories.map((category) => (
+    <li className="menu-item" key={category.id} onClick={handleMunuItemClick}>
+      <NavLink className="menu-link" to={category.path} exact>
         {category.name}
-      </Link>
+      </NavLink>
     </li>
   ));
+
+  const mode = useSelector((state: {mode: string}) => state.mode);
 
   return (
     <div className="menu">
       <div className="menu-toggle" onClick={openOrCloseMenu}>
         <span className="material-icons">{menuIcon}</span>
       </div>
-      <nav className={`menu-items-wrap ${menuStatus}`}>
+      <nav className={`menu-items-wrap ${menuStatus} ${mode}`}>
         <ul className="menu-items">
           <li className="menu-item" onClick={handleMunuItemClick}>
-            <Link className="menu-link active" to="/">
+            <NavLink className="menu-link" to="/" exact>
               Main Page
-            </Link>
+            </NavLink>
           </li>
-          {categoryLinks}
+          {links}
         </ul>
       </nav>
     </div>
@@ -64,3 +59,5 @@ function Menu(): JSX.Element {
 }
 
 export default Menu;
+
+// `/${category.name.split(' ').join('_').replace(/[()]/g, '')}`

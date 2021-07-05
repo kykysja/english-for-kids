@@ -1,0 +1,13 @@
+.button {
+  padding: 20px 25px;
+  @include font(2.4rem, 2.4rem, 500);
+  letter-spacing: 1.25px;
+  margin: 20px auto;
+  max-width: 280px;
+  background: $color-gradient-play-mode;
+  color: #fff;
+  border-radius: 10px;
+  outline: 0 !important;
+  border-width: 1px;
+  transition: 0.3s;
+}

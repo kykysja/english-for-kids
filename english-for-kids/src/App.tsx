@@ -1,11 +1,13 @@
-import React from 'react';
 import './App.scss';
+
+import React from 'react';
 import {BrowserRouter} from 'react-router-dom';
+
 import Main from './components/Main/Main';
 import Header from './components/Header/Header';
 
-export class App extends React.Component {
-  render = (): JSX.Element => (
+function App(): JSX.Element {
+  return (
     <div className="container">
       <div className="cover cover-active" />
       <BrowserRouter>
@@ -15,3 +17,5 @@ export class App extends React.Component {
     </div>
   );
 }
+
+export default App;
