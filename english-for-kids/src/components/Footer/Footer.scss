@@ -1,0 +1,48 @@
+@import '../../base-styles/mixins';
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-right: 20px;
+  margin-left: 20px;
+  margin-bottom: 50px;
+
+  @include media-max-640 {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+.footer-info {
+  @include media-max-640 {
+    margin-bottom: 20px;
+  }
+}
+
+.date {
+  @include font(1.8rem, 1.8rem, 500);
+  text-align: center;
+  padding-bottom: 8px;
+
+  @include media-max-640 {
+    // margin-top: 20px;
+    @include font(1.4rem, 1.4rem, 500);
+  }
+}
+.github-link {
+  @include font(1.8rem, 1.8rem, 500);
+  font-style: italic;
+  text-decoration: underline;
+  padding-bottom: 3px;
+
+  @include media-max-640 {
+    @include font(1.4rem, 1.4rem, 500);
+    margin-bottom: 15px;
+  }
+}
+.rsschool-logo {
+  img {
+    width: 90px;
+    height: 35px;
+  }
+}

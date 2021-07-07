@@ -4,10 +4,10 @@ import React from 'react';
 import {NavLink} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 
-import {Category} from '../../../../types/types';
+import {Category, RootState} from '../../../../types/types';
 
 function CategoryCard(props: {category: Category; key: number}): JSX.Element {
-  const currentMode = useSelector((state: {mode: string}) => state.mode);
+  const currentMode = useSelector((state: RootState) => state.baseReducer.mode);
   return (
     <li className="card-wrap">
       <NavLink to={props.category.path}>

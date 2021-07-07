@@ -10,4 +10,13 @@
   outline: 0 !important;
   border-width: 1px;
   transition: 0.3s;
+  display: flex;
+}
+
+.repeat-button {
+  border-radius: 50%;
+  .material-icons {
+    font-size: 4.2rem;
+    color: $color-main-light;
+  }
 }

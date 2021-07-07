@@ -13,3 +13,20 @@ export type Category = {
   path: string;
   words: WordCardBody[];
 };
+
+export type BaseState = {
+  mode: string;
+};
+
+export type CurrentGameState = {
+  isGameStarted: boolean;
+  currentCategory: WordCardBody[];
+  currentWord: WordCardBody;
+  rates: string[];
+  isGameFinished: boolean;
+};
+
+export type RootState = {
+  baseReducer: BaseState;
+  currentGame: CurrentGameState;
+};

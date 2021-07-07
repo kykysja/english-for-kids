@@ -11,11 +11,12 @@
   @include media-max-910 {
     margin-left: 12px;
   }
+  .material-icons {
+    font-size: 4.2rem;
+    color: $color-main-text;
+  }
 }
-.material-icons {
-  font-size: 4.2rem;
-  color: $color-main-text;
-}
+
 .menu-items-wrap {
   display: flex;
   justify-content: center;

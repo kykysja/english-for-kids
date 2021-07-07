@@ -1,10 +1,10 @@
-export const defaultState = {
+const defaultState = {
   mode: 'train-mode',
 };
 
 const CHANGE_MODE = 'CHANGE_MODE';
 
-export const appModeReducer = (state = defaultState, action) => {
+export const baseReducer = (state = defaultState, action) => {
   switch (action.type) {
     case CHANGE_MODE:
       return state.mode === 'train-mode'

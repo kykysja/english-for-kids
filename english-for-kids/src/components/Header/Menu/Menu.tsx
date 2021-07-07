@@ -5,6 +5,7 @@ import {useLocation, NavLink} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 
 import {categories} from '../../../data/categories';
+import {RootState} from '../../../types/types';
 
 function Menu(): JSX.Element {
   const [menuIcon, setMenuIcon] = useState('dehaze');
@@ -37,14 +38,14 @@ function Menu(): JSX.Element {
     </li>
   ));
 
-  const mode = useSelector((state: {mode: string}) => state.mode);
+  const currentMode = useSelector((state: RootState) => state.baseReducer.mode);
 
   return (
     <div className="menu">
       <div className="menu-toggle" onClick={openOrCloseMenu}>
         <span className="material-icons">{menuIcon}</span>
       </div>
-      <nav className={`menu-items-wrap ${menuStatus} ${mode}`}>
+      <nav className={`menu-items-wrap ${menuStatus} ${currentMode}`}>
         <ul className="menu-items">
           <li className="menu-item" onClick={handleMunuItemClick}>
             <NavLink className="menu-link" to="/" exact>

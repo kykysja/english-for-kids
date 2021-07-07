@@ -3,6 +3,9 @@
 .container {
   width: 1480px;
   margin: 0 auto;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 
   @include media-max-1479 {
     width: 1110px;
