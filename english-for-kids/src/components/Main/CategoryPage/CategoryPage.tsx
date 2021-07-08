@@ -1,33 +1,98 @@
 import './CategoryPage.scss';
 
-import React, {SyntheticEvent} from 'react';
+import React, {SyntheticEvent, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import WordCard from './WordCard/WordCard';
+import FinishGameModal from './FinishGameModal/FinishGameModal';
 
 import {categories} from '../../../data/categories';
 import {RootState} from '../../../types/types';
 import {
-  changeGameStatusAction,
   setCurrentWordAction,
   setCategoryWordsAction,
   addRateAction,
   removeWordAction,
-  // setFinishedGameInTrueAction,
+  setStartedGameInTrueAction,
 } from '../../../store/currentGameReducer';
 import {store} from '../../../store/index';
 
 function CategoryPage(props: {categoryId: number}): JSX.Element {
   const dispatch = useDispatch();
+
   const currentMode = useSelector((state: RootState) => state.baseReducer.mode);
   const isGameStarted = useSelector((state: RootState) => state.currentGame.isGameStarted);
-  const isGameFinished = useSelector((state: RootState) => state.currentGame.isGameFinished);
+
+  const [isGameFinished, setIsGameFinished] = useState(false);
+  const [gameResult, setGameResult] = useState('');
+  const [numberOfErrors, setNumberOfErrors] = useState(0);
 
   function play(src: string): void {
     const audio = new Audio();
     audio.src = src;
     audio.currentTime = 0;
     audio.play();
+  }
+
+  function continueGame() {
+    setTimeout(() => {
+      play(store.getState().currentGame.currentWord.audioSrc);
+    }, 700);
+  }
+
+  function finishGame() {
+    if (store.getState().currentGame.rates.indexOf('error') !== -1) {
+      setGameResult('failure');
+
+      const currentNumberOfErrors = store
+        .getState()
+        .currentGame.rates.filter((el) => el === 'error').length;
+
+      setNumberOfErrors(currentNumberOfErrors);
+      const errorEndGameSoundSrc = './assets/audio/failure.mp3';
+      setTimeout(() => {
+        play(errorEndGameSoundSrc);
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 2000);
+      }, 700);
+    } else {
+      setGameResult('success');
+      const successEndGameSoundSrc = './assets/audio/success.mp3';
+      setTimeout(() => {
+        play(successEndGameSoundSrc);
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 2000);
+      }, 700);
+      play(successEndGameSoundSrc);
+    }
+  }
+
+  function handleCorrectClick(event) {
+    (event.target as HTMLElement).classList.add('inactive');
+    const correctCardClickedSoundSrc = './assets/audio/correct.mp3';
+    play(correctCardClickedSoundSrc);
+
+    dispatch(addRateAction('success'));
+    dispatch(removeWordAction());
+    dispatch(setCurrentWordAction());
+
+    if (store.getState().currentGame.categoryWords[0].length) {
+      continueGame();
+    } else {
+      setIsGameFinished(true);
+
+      finishGame();
+    }
+  }
+
+  function handleWrongClick() {
+    const wrongCardClickedSoundSrc = './assets/audio/error.mp3';
+    setTimeout(() => {
+      play(wrongCardClickedSoundSrc);
+    }, 500);
+    dispatch(addRateAction('error'));
   }
 
   function handleCardClick(event: SyntheticEvent, audioSrs: string) {
@@ -39,48 +104,15 @@ function CategoryPage(props: {categoryId: number}): JSX.Element {
         break;
 
       case 'play-mode':
-        if (!(event.target as HTMLElement).classList.contains('inactive')) {
-          if ((event.target as HTMLElement).id === store.getState().currentGame.currentWord.word) {
-            (event.target as HTMLElement).classList.add('inactive');
-            const correctCardClickedSoundSrc = './assets/audio/correct.mp3';
-            play(correctCardClickedSoundSrc);
-
-            dispatch(addRateAction('success'));
-            dispatch(removeWordAction());
-            dispatch(setCurrentWordAction());
-
-            if (store.getState().currentGame.categoryWords[0].length) {
-              setTimeout(() => {
-                play(store.getState().currentGame.currentWord.audioSrc);
-              }, 700);
-            } else if (store.getState().currentGame.rates.indexOf('error') !== -1) {
-              /* const numberOfErrors = store
-                .getState()
-                .currentGame.rates.filter((el) => el === 'error').length; */
-              const errorEndGameSoundSrc = './assets/audio/failure.mp3';
-              setTimeout(() => {
-                play(errorEndGameSoundSrc);
-                setTimeout(() => {
-                  window.location.href = '/';
-                }, 2500);
-              }, 700);
+        if (isGameStarted) {
+          if (!(event.target as HTMLElement).classList.contains('inactive')) {
+            if (
+              (event.target as HTMLElement).id === store.getState().currentGame.currentWord.word
+            ) {
+              handleCorrectClick(event);
             } else {
-              // dispatch(setFinishedGameInTrueAction);
-              const successEndGameSoundSrc = './assets/audio/success.mp3';
-              setTimeout(() => {
-                play(successEndGameSoundSrc);
-                setTimeout(() => {
-                  window.location.href = '/';
-                }, 2500);
-              }, 700);
-              play(successEndGameSoundSrc);
+              handleWrongClick();
             }
-          } else {
-            const wrangCardClickedSoundSrc = './assets/audio/error.mp3';
-            setTimeout(() => {
-              play(wrangCardClickedSoundSrc);
-            }, 500);
-            dispatch(addRateAction('error'));
           }
         }
         break;
@@ -103,7 +135,7 @@ function CategoryPage(props: {categoryId: number}): JSX.Element {
   ));
 
   function initGame() {
-    dispatch(changeGameStatusAction());
+    dispatch(setStartedGameInTrueAction());
 
     const currentWords = currentCategory.words
       .map((a) => ({...a}))
@@ -140,15 +172,6 @@ function CategoryPage(props: {categoryId: number}): JSX.Element {
     }
     return <></>;
   }
-  function FinishGameModal(): JSX.Element {
-    if (isGameFinished)
-      return (
-        <div className="finish-game-modal">
-          <img src="./assets/img/success.jpg"></img>
-        </div>
-      );
-    return <></>;
-  }
 
   return (
     <>
@@ -158,7 +181,11 @@ function CategoryPage(props: {categoryId: number}): JSX.Element {
         {cards}
       </div>
       <GameButton />
-      <FinishGameModal />
+      <FinishGameModal
+        gameResult={gameResult}
+        isGameFinished={isGameFinished}
+        numberOfErrors={numberOfErrors}
+      />
     </>
   );
 }

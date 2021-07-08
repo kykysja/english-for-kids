@@ -8,7 +8,8 @@ const defaultState = {
   isGameFinished: false,
 };
 
-const CHANGE_GAME_STATUS = 'CHANGE_GAME_STATUS';
+const SET_STARTED_GAME_IN_TRUE = 'SET_STARTED_GAME_IN_TRUE';
+const SET_STARTED_GAME_IN_FALSE = 'SET_STARTED_GAME_IN_FALSE';
 const SET_CATEGORY_WORDS = 'SET_CATEGORY_WORDS';
 const SET_CURRENT_WORD = 'SET_CURRENT_WORD';
 const REMOVE_WORD = 'REMOVE_WORD';
@@ -18,12 +19,14 @@ const SET_FINISHED_GAME_IN_FALSE = 'SET_FINISHED_GAME_IN_TRUE';
 
 export const currentGameReducer = (state = defaultState, action: {type: string; payload?: any}) => {
   switch (action.type) {
-    case CHANGE_GAME_STATUS:
-      return state.isGameStarted
-        ? {...state, isGameStarted: false}
-        : {...state, isGameStarted: true};
+    case SET_STARTED_GAME_IN_TRUE:
+      return {...state, isGameStarted: true};
+
+    case SET_STARTED_GAME_IN_FALSE:
+      return {...state, isGameStarted: false};
 
     case SET_CATEGORY_WORDS:
+      state.categoryWords = [];
       return {...state, categoryWords: [...state.categoryWords, action.payload]};
 
     case SET_CURRENT_WORD:
@@ -49,7 +52,9 @@ export const currentGameReducer = (state = defaultState, action: {type: string; 
   }
 };
 
-export const changeGameStatusAction = () => ({type: CHANGE_GAME_STATUS});
+export const setStartedGameInTrueAction = () => ({type: SET_STARTED_GAME_IN_TRUE});
+
+export const setStartedGameInFalseAction = () => ({type: SET_STARTED_GAME_IN_FALSE});
 
 export const setCategoryWordsAction = (payload) => ({
   type: SET_CATEGORY_WORDS,

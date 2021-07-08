@@ -2,12 +2,14 @@ import './Menu.scss';
 
 import React, {useState} from 'react';
 import {useLocation, NavLink} from 'react-router-dom';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {categories} from '../../../data/categories';
 import {RootState} from '../../../types/types';
+import {setStartedGameInFalseAction} from '../../../store/currentGameReducer';
 
 function Menu(): JSX.Element {
+  const dispatch = useDispatch();
   const [menuIcon, setMenuIcon] = useState('dehaze');
   const [menuStatus, setMenuStatus] = useState('closed');
   const location = useLocation();
@@ -20,8 +22,10 @@ function Menu(): JSX.Element {
   }
 
   function handleMunuItemClick(): void {
+    dispatch(setStartedGameInFalseAction());
     openOrCloseMenu();
   }
+
   document.querySelector('.cover')?.addEventListener('click', () => {
     openOrCloseMenu();
   });

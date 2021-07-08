@@ -1,0 +1,24 @@
+@import '../../../../base-styles//const';
+@import '../../../../base-styles/mixins';
+
+.finish-game-modal {
+  background-color: $color-main-light;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+
+  img {
+    width: 50%;
+  }
+}
+.errors-message {
+  @include font(4.6rem, 4.6rem, 500);
+  color: red;
+}
