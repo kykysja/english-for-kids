@@ -26,7 +26,13 @@ export type CurrentGameState = {
   isGameFinished: boolean;
 };
 
+export type Statistic = {
+  difficultWords: [];
+  tableData: any;
+};
+
 export type RootState = {
   baseReducer: BaseState;
   currentGame: CurrentGameState;
+  statistic: Statistic;
 };

@@ -14,6 +14,7 @@ const SET_CATEGORY_WORDS = 'SET_CATEGORY_WORDS';
 const SET_CURRENT_WORD = 'SET_CURRENT_WORD';
 const REMOVE_WORD = 'REMOVE_WORD';
 const ADD_RATE = 'ADD_RATE';
+const REMOVE_RATES = 'REMOVE_RATES';
 const SET_FINISHED_GAME_IN_TRUE = 'SET_FINISHED_GAME_IN_TRUE';
 const SET_FINISHED_GAME_IN_FALSE = 'SET_FINISHED_GAME_IN_TRUE';
 
@@ -40,6 +41,10 @@ export const currentGameReducer = (state = defaultState, action: {type: string; 
 
     case ADD_RATE:
       return {...state, rates: [...state.rates, action.payload]};
+
+    case REMOVE_RATES:
+      state.rates = [];
+      return state;
 
     case SET_FINISHED_GAME_IN_TRUE:
       return {...state, isGameFinished: true};
@@ -68,6 +73,8 @@ export const setCurrentWordAction = (): {type: string} => ({
 export const removeWordAction = () => ({type: REMOVE_WORD});
 
 export const addRateAction = (payload) => ({type: ADD_RATE, payload});
+
+export const removeRatesAction = () => ({type: REMOVE_RATES});
 
 export const setFinishedGameInTrueAction = () => ({type: SET_FINISHED_GAME_IN_TRUE});
 

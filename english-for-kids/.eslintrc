@@ -80,6 +80,9 @@
         "ts": "never",
         "tsx": "never"
       }
-    ]
+    ],
+    "prefer-destructuring": "off",
+    "array-callback-return": "off",
+    "@typescript-eslint/no-shadow": "off"
   }
 }

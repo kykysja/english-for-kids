@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {categories} from '../../../data/categories';
 import {RootState} from '../../../types/types';
-import {setStartedGameInFalseAction} from '../../../store/currentGameReducer';
+import {setStartedGameInFalseAction, removeRatesAction} from '../../../store/currentGameReducer';
 
 function Menu(): JSX.Element {
   const dispatch = useDispatch();
@@ -23,6 +23,7 @@ function Menu(): JSX.Element {
 
   function handleMunuItemClick(): void {
     dispatch(setStartedGameInFalseAction());
+    dispatch(removeRatesAction());
     openOrCloseMenu();
   }
 
@@ -57,6 +58,11 @@ function Menu(): JSX.Element {
             </NavLink>
           </li>
           {links}
+          <li className="menu-item" onClick={handleMunuItemClick}>
+            <NavLink className="menu-link" to="/statistic" exact>
+              Statistic
+            </NavLink>
+          </li>
         </ul>
       </nav>
     </div>

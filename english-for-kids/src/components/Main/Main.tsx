@@ -8,6 +8,7 @@ import CategoryPage from './CategoryPage/CategoryPage';
 import MainPage from './MainPage/MainPage';
 
 import {categories} from '../../data/categories';
+import StatisticPage from '../Statistic/Statistic';
 
 function Main(): JSX.Element {
   const routess = categories.map((category) => (
@@ -24,6 +25,8 @@ function Main(): JSX.Element {
       <Switch>
         <Route exact path="/" component={MainPage} />
         {routess}
+        <Route exact path="/statistic" component={StatisticPage} />
+        <Route exact path="/difficult_words" component={CategoryPage} />
       </Switch>
     </main>
   );

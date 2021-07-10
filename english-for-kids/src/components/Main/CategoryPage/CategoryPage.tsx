@@ -16,8 +16,15 @@ import {
   setStartedGameInTrueAction,
 } from '../../../store/currentGameReducer';
 import {store} from '../../../store/index';
+import {
+  getFromLocalStorage,
+  addTrainModeClickToCount,
+  addCorrectClickToCount,
+  addWrongClickToCount,
+  getWord,
+} from '../../../local-storage/local-storage-wrap';
 
-function CategoryPage(props: {categoryId: number}): JSX.Element {
+function CategoryPage(props: {categoryId?: number}): JSX.Element {
   const dispatch = useDispatch();
 
   const currentMode = useSelector((state: RootState) => state.baseReducer.mode);
@@ -54,7 +61,7 @@ function CategoryPage(props: {categoryId: number}): JSX.Element {
         play(errorEndGameSoundSrc);
         setTimeout(() => {
           window.location.href = '/';
-        }, 2000);
+        }, 3000);
       }, 700);
     } else {
       setGameResult('success');
@@ -63,13 +70,14 @@ function CategoryPage(props: {categoryId: number}): JSX.Element {
         play(successEndGameSoundSrc);
         setTimeout(() => {
           window.location.href = '/';
-        }, 2000);
+        }, 3000);
       }, 700);
       play(successEndGameSoundSrc);
     }
   }
 
   function handleCorrectClick(event) {
+    addCorrectClickToCount(getWord(event));
     (event.target as HTMLElement).classList.add('inactive');
     const correctCardClickedSoundSrc = './assets/audio/correct.mp3';
     play(correctCardClickedSoundSrc);
@@ -82,12 +90,13 @@ function CategoryPage(props: {categoryId: number}): JSX.Element {
       continueGame();
     } else {
       setIsGameFinished(true);
-
+      document.querySelector('.cards-container').innerHTML = '';
       finishGame();
     }
   }
 
-  function handleWrongClick() {
+  function handleWrongClick({word, wordObj}) {
+    addWrongClickToCount({word, wordObj});
     const wrongCardClickedSoundSrc = './assets/audio/error.mp3';
     setTimeout(() => {
       play(wrongCardClickedSoundSrc);
@@ -100,6 +109,7 @@ function CategoryPage(props: {categoryId: number}): JSX.Element {
       case 'train-mode':
         if (!(event.target as HTMLElement).classList.contains('rotate-btn')) {
           play(audioSrs);
+          addTrainModeClickToCount(getWord(event));
         }
         break;
 
@@ -111,7 +121,9 @@ function CategoryPage(props: {categoryId: number}): JSX.Element {
             ) {
               handleCorrectClick(event);
             } else {
-              handleWrongClick();
+              const word = store.getState().currentGame.currentWord.word;
+              const wordObj = getFromLocalStorage(word);
+              handleWrongClick({word, wordObj});
             }
           }
         }
@@ -129,15 +141,27 @@ function CategoryPage(props: {categoryId: number}): JSX.Element {
       key={String(index)}></div>
   ));
 
-  const currentCategory = categories.find((category) => category.id === props.categoryId);
-  const cards = currentCategory.words.map((word) => (
-    <WordCard wordBody={word} handleCardClick={handleCardClick} key={word.id}></WordCard>
-  ));
+  let currentCategory;
+  let currentCategoryWords;
+  let cards;
+
+  if (props.categoryId) {
+    currentCategory = categories.find((category) => category.id === props.categoryId);
+    currentCategoryWords = currentCategory.words;
+    cards = currentCategoryWords.map((word) => (
+      <WordCard wordBody={word} handleCardClick={handleCardClick} key={word.id}></WordCard>
+    ));
+  } else {
+    currentCategoryWords = store.getState().baseReducer.difficultWords[0];
+    cards = currentCategoryWords.map((word, index) => (
+      <WordCard wordBody={word} handleCardClick={handleCardClick} key={index + 1}></WordCard>
+    ));
+  }
 
   function initGame() {
     dispatch(setStartedGameInTrueAction());
 
-    const currentWords = currentCategory.words
+    const currentWords = currentCategoryWords
       .map((a) => ({...a}))
       .sort(() => Math.round(Math.random() * 100) - 50);
 
@@ -173,19 +197,28 @@ function CategoryPage(props: {categoryId: number}): JSX.Element {
     return <></>;
   }
 
+  function Rating(): JSX.Element {
+    if (isGameStarted) {
+      return <div className="rating">{rates}</div>;
+    }
+    return <></>;
+  }
+
   return (
     <>
-      <h2 className="category-page-title">{currentCategory.name}</h2>
+      <h2 className="category-page-title">
+        {currentCategory ? currentCategory.name : 'Difficult Words'}
+      </h2>
+      <Rating />
       <div className="cards-container">
-        <div className="rating">{rates}</div>
         {cards}
+        <FinishGameModal
+          gameResult={gameResult}
+          isGameFinished={isGameFinished}
+          numberOfErrors={numberOfErrors}
+        />
       </div>
       <GameButton />
-      <FinishGameModal
-        gameResult={gameResult}
-        isGameFinished={isGameFinished}
-        numberOfErrors={numberOfErrors}
-      />
     </>
   );
 }

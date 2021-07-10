@@ -9,4 +9,5 @@
     "source.fixAll.eslint": true
   },
   "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets": true,
+
 }
