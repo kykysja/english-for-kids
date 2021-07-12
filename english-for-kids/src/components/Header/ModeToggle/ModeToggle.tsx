@@ -8,9 +8,9 @@ import {RootState} from '../../../types/types';
 
 function ModeToggle(): JSX.Element {
   const dispatch = useDispatch();
-  const currentMode = useSelector((state: RootState) => state.baseReducer.mode);
+  const currentMode: string = useSelector((state: RootState): string => state.baseReducer.mode);
 
-  function changeAppMode() {
+  function changeAppMode(): void {
     dispatch(changeModeAction());
   }
 

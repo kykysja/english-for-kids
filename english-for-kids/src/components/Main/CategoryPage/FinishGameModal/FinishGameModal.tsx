@@ -7,7 +7,7 @@ function FinishGameModal(props: {
   isGameFinished: boolean;
   numberOfErrors: number;
 }): JSX.Element {
-  function ErrorsMessage() {
+  function ErrorsMessage(): JSX.Element {
     if (props.numberOfErrors) {
       return <div className="errors-message">{props.numberOfErrors} errors</div>;
     }

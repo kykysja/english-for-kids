@@ -3,13 +3,14 @@ import './Menu.scss';
 import React, {useState} from 'react';
 import {useLocation, NavLink} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
+import {Dispatch} from 'redux';
 
 import {categories} from '../../../data/categories';
-import {RootState} from '../../../types/types';
+import {BaseStateAction, CurrentGameAction, RootState} from '../../../types/types';
 import {setStartedGameInFalseAction, removeRatesAction} from '../../../store/currentGameReducer';
 
 function Menu(): JSX.Element {
-  const dispatch = useDispatch();
+  const dispatch: Dispatch<BaseStateAction | CurrentGameAction> = useDispatch();
   const [menuIcon, setMenuIcon] = useState('dehaze');
   const [menuStatus, setMenuStatus] = useState('closed');
   const location = useLocation();
@@ -35,7 +36,7 @@ function Menu(): JSX.Element {
     document.querySelector('.cover')?.classList.remove('cover-active');
   }, [location]);
 
-  const links = categories.map((category) => (
+  const links: JSX.Element[] = categories.map((category) => (
     <li className="menu-item" key={category.id} onClick={handleMunuItemClick}>
       <NavLink className="menu-link" to={category.path} exact>
         {category.name}
@@ -43,7 +44,7 @@ function Menu(): JSX.Element {
     </li>
   ));
 
-  const currentMode = useSelector((state: RootState) => state.baseReducer.mode);
+  const currentMode = useSelector((state: RootState): string => state.baseReducer.mode);
 
   return (
     <div className="menu">
@@ -70,5 +71,3 @@ function Menu(): JSX.Element {
 }
 
 export default Menu;
-
-// `/${category.name.split(' ').join('_').replace(/[()]/g, '')}`

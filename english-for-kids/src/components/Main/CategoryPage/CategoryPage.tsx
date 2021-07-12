@@ -7,7 +7,7 @@ import WordCard from './WordCard/WordCard';
 import FinishGameModal from './FinishGameModal/FinishGameModal';
 
 import {categories} from '../../../data/categories';
-import {RootState} from '../../../types/types';
+import {GetWord, RootState} from '../../../types/types';
 import {
   setCurrentWordAction,
   setCategoryWordsAction,
@@ -23,6 +23,9 @@ import {
   addWrongClickToCount,
   getWord,
 } from '../../../local-storage/local-storage-wrap';
+
+const PLAY_SOUND_DELAY = 700;
+const LOCATION_CHANGE_DELAY = 2200;
 
 function CategoryPage(props: {categoryId?: number}): JSX.Element {
   const dispatch = useDispatch();
@@ -41,13 +44,13 @@ function CategoryPage(props: {categoryId?: number}): JSX.Element {
     audio.play();
   }
 
-  function continueGame() {
+  function continueGame(): void {
     setTimeout(() => {
       play(store.getState().currentGame.currentWord.audioSrc);
-    }, 700);
+    }, PLAY_SOUND_DELAY);
   }
 
-  function finishGame() {
+  function finishGame(): void {
     if (store.getState().currentGame.rates.indexOf('error') !== -1) {
       setGameResult('failure');
 
@@ -61,8 +64,8 @@ function CategoryPage(props: {categoryId?: number}): JSX.Element {
         play(errorEndGameSoundSrc);
         setTimeout(() => {
           window.location.href = '/';
-        }, 3000);
-      }, 700);
+        }, LOCATION_CHANGE_DELAY);
+      }, PLAY_SOUND_DELAY);
     } else {
       setGameResult('success');
       const successEndGameSoundSrc = './assets/audio/success.mp3';
@@ -70,15 +73,17 @@ function CategoryPage(props: {categoryId?: number}): JSX.Element {
         play(successEndGameSoundSrc);
         setTimeout(() => {
           window.location.href = '/';
-        }, 3000);
-      }, 700);
+        }, LOCATION_CHANGE_DELAY);
+      }, PLAY_SOUND_DELAY);
       play(successEndGameSoundSrc);
     }
   }
 
-  function handleCorrectClick(event) {
+  function handleCorrectClick(event: SyntheticEvent): void {
     addCorrectClickToCount(getWord(event));
+
     (event.target as HTMLElement).classList.add('inactive');
+
     const correctCardClickedSoundSrc = './assets/audio/correct.mp3';
     play(correctCardClickedSoundSrc);
 
@@ -86,7 +91,7 @@ function CategoryPage(props: {categoryId?: number}): JSX.Element {
     dispatch(removeWordAction());
     dispatch(setCurrentWordAction());
 
-    if (store.getState().currentGame.categoryWords[0].length) {
+    if (store.getState().currentGame.categoryWords[0][0]) {
       continueGame();
     } else {
       setIsGameFinished(true);
@@ -95,16 +100,16 @@ function CategoryPage(props: {categoryId?: number}): JSX.Element {
     }
   }
 
-  function handleWrongClick({word, wordObj}) {
+  function handleWrongClick({word, wordObj}: GetWord): void {
     addWrongClickToCount({word, wordObj});
+
     const wrongCardClickedSoundSrc = './assets/audio/error.mp3';
-    setTimeout(() => {
-      play(wrongCardClickedSoundSrc);
-    }, 500);
+    play(wrongCardClickedSoundSrc);
+
     dispatch(addRateAction('error'));
   }
 
-  function handleCardClick(event: SyntheticEvent, audioSrs: string) {
+  function handleCardClick(event: SyntheticEvent, audioSrs: string): void {
     switch (currentMode) {
       case 'train-mode':
         if (!(event.target as HTMLElement).classList.contains('rotate-btn')) {
@@ -134,7 +139,7 @@ function CategoryPage(props: {categoryId?: number}): JSX.Element {
   }
 
   const ratesArray = useSelector((state: RootState) => state.currentGame.rates);
-  const rates = ratesArray.map((rate, index) => (
+  const rates: JSX.Element[] = ratesArray.map((rate, index) => (
     <div
       className={`star-${rate}`}
       style={{backgroundImage: `url('./assets/img/star-${rate}.svg')`}}
@@ -158,7 +163,7 @@ function CategoryPage(props: {categoryId?: number}): JSX.Element {
     ));
   }
 
-  function initGame() {
+  function initGame(): void {
     dispatch(setStartedGameInTrueAction());
 
     const currentWords = currentCategoryWords
@@ -173,7 +178,7 @@ function CategoryPage(props: {categoryId?: number}): JSX.Element {
     }, 700);
   }
 
-  function repeatWord() {
+  function repeatWord(): void {
     setTimeout(() => {
       play(store.getState().currentGame.currentWord.audioSrc);
     }, 300);

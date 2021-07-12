@@ -4,8 +4,9 @@ import React, {SyntheticEvent, useState} from 'react';
 import {NavLink} from 'react-router-dom';
 import {useDispatch} from 'react-redux';
 
+import {TableDataItem} from '../../types/types';
 import {getFromLocalStorage, setBaseLocalStorage} from '../../local-storage/local-storage-wrap';
-import {setDifficultWords} from '../../store/baseReducer';
+import {setDifficultWordsAction} from '../../store/baseReducer';
 
 function StatisticPage(): JSX.Element {
   const dispatch = useDispatch();
@@ -21,7 +22,7 @@ function StatisticPage(): JSX.Element {
     }
   }
 
-  const tableDataArr = [];
+  const tableDataArr: TableDataItem[] = [];
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
     tableDataArr.push(getFromLocalStorage(key));
@@ -35,10 +36,10 @@ function StatisticPage(): JSX.Element {
   const [sortBy, setSortBy] = useState('word');
   const [sortOrder, setSortOrder] = useState('asc');
 
-  function sortTablaData(event: SyntheticEvent) {
+  function sortTablaData(event: SyntheticEvent): void {
     const field = (event.target as HTMLElement).id;
 
-    let sortedTableData;
+    let sortedTableData: TableDataItem[];
 
     if (sortOrder === 'asc') {
       sortedTableData = tableDataDefaultSorted.sort((a, b) => (a[field] < b[field] ? 1 : -1));
@@ -46,7 +47,7 @@ function StatisticPage(): JSX.Element {
       sortedTableData = tableDataDefaultSorted.sort((a, b) => (a[field] > b[field] ? 1 : -1));
     }
 
-    const newTableData = [];
+    const newTableData: TableDataItem[] = [];
     for (let i = 0; i < sortedTableData.length; i++) {
       newTableData.push(sortedTableData[i]);
     }
@@ -56,11 +57,11 @@ function StatisticPage(): JSX.Element {
     setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
   }
 
-  function handleClearLocalStorage() {
+  function handleClearLocalStorage(): void {
     localStorage.clear();
     setBaseLocalStorage();
 
-    const newTableDataArr = [];
+    const newTableDataArr: TableDataItem[] = [];
 
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
@@ -77,10 +78,10 @@ function StatisticPage(): JSX.Element {
     setSortOrder('asc');
   }
 
-  function trainDifficultWords() {
+  function trainDifficultWords(): void {
     const sortedByRatingTableData = tableData.sort((a, b) => a.rating - b.rating);
 
-    const difficultWordsArr = [];
+    const difficultWordsArr: TableDataItem[] = [];
 
     for (let i = 0; i < sortedByRatingTableData.length; i++) {
       if (sortedByRatingTableData[i].rating < 100 && sortedByRatingTableData[i].rating !== 0) {
@@ -89,7 +90,7 @@ function StatisticPage(): JSX.Element {
     }
     difficultWordsArr.splice(8, difficultWordsArr.length - 1);
 
-    dispatch(setDifficultWords(difficultWordsArr));
+    dispatch(setDifficultWordsAction(difficultWordsArr));
   }
 
   return (

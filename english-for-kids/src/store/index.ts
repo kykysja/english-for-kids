@@ -1,14 +1,26 @@
-import {createStore, combineReducers, applyMiddleware} from 'redux';
+import {
+  createStore,
+  combineReducers,
+  applyMiddleware,
+  Reducer,
+  CombinedState,
+  Store,
+  EmptyObject,
+} from 'redux';
 import thunk from 'redux-thunk';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import {baseReducer} from './baseReducer';
 import {currentGameReducer} from './currentGameReducer';
-import {statisticReducer} from './statisticReducer';
+import {BaseStateAction, CurrentGameAction, RootState} from '../types/types';
 
-const rootReducer = combineReducers({
+const rootReducer: Reducer<
+  CombinedState<RootState>,
+  BaseStateAction | CurrentGameAction
+> = combineReducers({
   baseReducer,
   currentGame: currentGameReducer,
-  statistic: statisticReducer,
 });
 
-export const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
+export const store: Store<EmptyObject & RootState, CurrentGameAction | BaseStateAction> & {
+  dispatch: unknown;
+} = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));

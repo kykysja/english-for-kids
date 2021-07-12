@@ -12,7 +12,7 @@ function WordCard(props: {
 }): JSX.Element {
   const [cardStatus, setCardStatus] = useState('');
 
-  const currentMode = useSelector((state: RootState) => state.baseReducer.mode);
+  const currentMode: string = useSelector((state: RootState): string => state.baseReducer.mode);
 
   function flippToFront(): void {
     setCardStatus('');
