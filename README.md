@@ -40,4 +40,4 @@ The application works in training mode and in game mode.
 When you load the app or reload the page, the app opens in workout mode.
 Switching between training mode and playing mode occurs when you click on the Train/Play switch.
 
-## Deploy: https://english-for-kids-kykysja.netlify.app
+## https://kykysja-english-for-kids.netlify.app
